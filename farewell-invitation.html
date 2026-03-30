@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Farewell Get-Together</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Josefin+Sans:wght@300;400&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #1a1410;
+    font-family: 'Cormorant Garamond', serif;
+    padding: 20px;
+  }
+
+  .card-wrapper {
+    width: 500px;
+    position: relative;
+  }
+
+  .card {
+    background: linear-gradient(165deg, #fdf8f0 0%, #f7edd8 40%, #f0e4c8 100%);
+    border-radius: 14px;
+    padding: 52px 42px 44px;
+    position: relative;
+    overflow: hidden;
+    box-shadow:
+      0 0 0 1px rgba(184, 148, 76, 0.3),
+      0 25px 70px rgba(0,0,0,0.35),
+      0 0 100px rgba(184, 148, 76, 0.1);
+  }
+
+  .card::before {
+    content: '';
+    position: absolute;
+    inset: 9px;
+    border: 1.5px solid rgba(184, 148, 76, 0.35);
+    border-radius: 8px;
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  /* ─── Floral layers ─── */
+  .floral-corner {
+    position: absolute;
+    pointer-events: none;
+    z-index: 0;
+    width: 230px;
+    height: 230px;
+  }
+  .floral-corner svg { width: 100%; height: 100%; }
+  .fc-tl { top: -12px;  left: -12px; }
+  .fc-tr { top: -12px;  right: -12px; transform: scaleX(-1); }
+  .fc-bl { bottom: -12px; left: -12px; transform: scaleY(-1); }
+  .fc-br { bottom: -12px; right: -12px; transform: scale(-1,-1); }
+
+  .floral-side {
+    position: absolute;
+    pointer-events: none;
+    z-index: 0;
+    width: 90px;
+    height: 200px;
+  }
+  .floral-side svg { width: 100%; height: 100%; }
+  .fs-l { top: 50%; left: -4px; transform: translateY(-50%); }
+  .fs-r { top: 50%; right: -4px; transform: translateY(-50%) scaleX(-1); }
+
+  .center-bloom {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    width: 340px; height: 340px;
+    opacity: 0.035;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .content {
+    position: relative;
+    z-index: 2;
+  }
+
+  .header-line {
+    width: 50px; height: 1.5px;
+    background: linear-gradient(90deg, transparent, #b8944c, transparent);
+    margin: 0 auto 16px;
+    animation: fadeIn 1s ease-out;
+  }
+
+  .invite-label {
+    text-align: center;
+    font-family: 'Josefin Sans', sans-serif;
+    font-weight: 300; font-size: 10px;
+    letter-spacing: 5px;
+    text-transform: uppercase;
+    color: #b8944c;
+    margin-bottom: 20px;
+    animation: fadeIn 1s ease-out 0.2s both;
+  }
+
+  .title {
+    text-align: center;
+    font-family: 'Playfair Display', serif;
+    font-weight: 700; font-size: 33px;
+    color: #2c1f0e; line-height: 1.2;
+    margin-bottom: 4px;
+    animation: fadeIn 1s ease-out 0.3s both;
+  }
+
+  .subtitle {
+    text-align: center;
+    font-family: 'Playfair Display', serif;
+    font-style: italic; font-weight: 400; font-size: 18px;
+    color: #8b6f3a; margin-bottom: 22px;
+    animation: fadeIn 1s ease-out 0.4s both;
+  }
+
+  .divider {
+    display: flex; align-items: center; justify-content: center;
+    gap: 12px; margin: 18px 0;
+    animation: fadeIn 1s ease-out 0.5s both;
+  }
+  .divider-line { width: 60px; height: 1px; background: linear-gradient(90deg, transparent, #c9a84c, transparent); }
+  .divider-diamond { width: 6px; height: 6px; background: #c9a84c; transform: rotate(45deg); }
+
+  .body-text {
+    text-align: center; font-size: 15px; font-weight: 400;
+    color: #4a3a22; line-height: 1.7; margin-bottom: 24px;
+    animation: fadeIn 1s ease-out 0.6s both;
+  }
+  .body-text em { font-style: italic; color: #6b5330; }
+
+  .details-grid {
+    display: grid; gap: 14px; margin-bottom: 24px;
+    animation: fadeIn 1s ease-out 0.7s both;
+  }
+
+  .detail-row {
+    display: flex; align-items: flex-start; gap: 14px;
+    padding: 12px 16px;
+    background: rgba(255,255,255,0.5);
+    backdrop-filter: blur(4px);
+    border-radius: 8px;
+    border-left: 2.5px solid #c9a84c;
+  }
+
+  .detail-icon { width: 20px; height: 20px; flex-shrink: 0; margin-top: 2px; color: #b8944c; }
+  .detail-content { flex: 1; }
+  .detail-label {
+    font-family: 'Josefin Sans', sans-serif;
+    font-size: 9px; letter-spacing: 3px;
+    text-transform: uppercase; color: #a0875a; margin-bottom: 3px;
+  }
+  .detail-value {
+    font-family: 'Playfair Display', serif;
+    font-size: 16px; font-weight: 600;
+    color: #2c1f0e; line-height: 1.4;
+  }
+  .detail-sub { font-size: 12.5px; color: #7a6540; margin-top: 2px; font-style: italic; }
+
+  .venue-link {
+    display: inline-flex; align-items: center; gap: 5px;
+    font-family: 'Josefin Sans', sans-serif;
+    font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase;
+    color: #b8944c; text-decoration: none;
+    margin-top: 6px; padding: 4px 10px;
+    border: 1px solid rgba(184,148,76,0.3); border-radius: 4px;
+    transition: all 0.3s ease;
+  }
+  .venue-link:hover { background: rgba(184,148,76,0.12); border-color: #b8944c; }
+
+  .guests-section { text-align: center; margin-bottom: 22px; animation: fadeIn 1s ease-out 0.8s both; }
+  .guests-label {
+    font-family: 'Josefin Sans', sans-serif;
+    font-size: 9px; letter-spacing: 4px;
+    text-transform: uppercase; color: #b8944c; margin-bottom: 10px;
+  }
+  .guest-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 17px; font-weight: 600;
+    color: #2c1f0e; line-height: 1.9;
+  }
+
+  .quote-section { text-align: center; padding: 18px 20px; margin-top: 8px; animation: fadeIn 1s ease-out 1s both; }
+  .quote-mark {
+    font-family: 'Playfair Display', serif;
+    font-size: 48px; color: #c9a84c; opacity: 0.3;
+    line-height: 0.5; display: block; margin-bottom: 6px;
+  }
+  .quote-text {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic; font-size: 14.5px;
+    color: #6b5330; line-height: 1.7;
+  }
+
+  .footer-flourish {
+    display: flex; align-items: center; justify-content: center;
+    gap: 8px; margin-top: 20px;
+    animation: fadeIn 1s ease-out 1.1s both;
+  }
+  .footer-line { width: 40px; height: 1px; background: linear-gradient(90deg, transparent, rgba(184,148,76,0.4), transparent); }
+  .footer-dot { width: 4px; height: 4px; border-radius: 50%; background: #c9a84c; opacity: 0.5; }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @media (max-width: 520px) {
+    .card-wrapper { width: 100%; }
+    .card { padding: 40px 22px 34px; }
+    .title { font-size: 26px; }
+    .subtitle { font-size: 16px; }
+    .floral-corner { width: 175px; height: 175px; }
+    .floral-side { width: 65px; height: 160px; }
+  }
+</style>
+</head>
+<body>
+<div class="card-wrapper">
+  <div class="card">
+
+    <!-- ══════ CORNER FLORALS — rich rose & vine clusters ══════ -->
+    <div class="floral-corner fc-tl"><svg viewBox="0 0 230 230" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <!-- Main vine stems -->
+      <path d="M8 8 C20 30,30 65,38 105 C42 125,38 155,48 185 C52 198,62 210,78 218" stroke="#7a6332" stroke-width="1.4" opacity="0.38" fill="none"/>
+      <path d="M8 8 C25 16,60 25,100 34 C135 42,160 46,188 52 C200 55,212 64,218 78" stroke="#7a6332" stroke-width="1.4" opacity="0.38" fill="none"/>
+      <!-- Thinner secondary vines -->
+      <path d="M14 42 C22 62,30 90,34 118 C36 135,32 152,36 170" stroke="#8b6f3a" stroke-width="0.9" opacity="0.28" fill="none"/>
+      <path d="M42 14 C62 22,90 30,118 34 C140 37,152 34,172 38" stroke="#8b6f3a" stroke-width="0.9" opacity="0.28" fill="none"/>
+      <!-- Tertiary whispy vines -->
+      <path d="M20 20 C26 40,28 60,24 80" stroke="#8b6f3a" stroke-width="0.5" opacity="0.2" fill="none"/>
+      <path d="M20 20 C40 26,60 28,80 24" stroke="#8b6f3a" stroke-width="0.5" opacity="0.2" fill="none"/>
+
+      <!-- ★ LARGE ROSE — corner focal point -->
+      <circle cx="42" cy="42" r="24" fill="#cc7e68" opacity="0.14"/>
+      <path d="M42 18 C52 24,60 34,56 44 C52 54,42 58,32 54 C22 50,18 40,22 30 C26 22,36 16,42 18Z" fill="#cc7e68" opacity="0.2"/>
+      <path d="M34 26 C40 28,48 32,50 40 C52 48,46 54,38 52 C30 50,26 44,26 38 C26 32,30 28,34 26Z" fill="#d4907a" opacity="0.22"/>
+      <path d="M38 32 C42 34,46 38,46 42 C46 46,42 50,38 48 C34 46,32 42,32 38 C32 34,36 32,38 32Z" fill="#daa48e" opacity="0.26"/>
+      <circle cx="42" cy="42" r="6" fill="#e0b89e" opacity="0.22"/>
+      <!-- Rose outer petals shimmer -->
+      <path d="M24 30 C28 22,36 18,42 18 C36 20,30 24,26 32Z" fill="#d49680" opacity="0.12"/>
+      <path d="M30 54 C24 48,20 40,22 32 C22 40,24 48,30 52Z" fill="#d49680" opacity="0.1"/>
+
+      <!-- ★ MEDIUM ROSE on vertical vine -->
+      <circle cx="44" cy="135" r="16" fill="#c98b72" opacity="0.12"/>
+      <path d="M44 120 C50 124,56 130,54 138 C52 146,44 148,38 144 C32 140,30 134,32 128 C34 122,40 118,44 120Z" fill="#c98b72" opacity="0.16"/>
+      <path d="M40 126 C44 128,48 132,48 136 C48 140,44 144,40 142 C36 140,34 136,34 132 C34 128,38 126,40 126Z" fill="#d49c86" opacity="0.18"/>
+      <circle cx="44" cy="135" r="4" fill="#dab09a" opacity="0.16"/>
+
+      <!-- ★ MEDIUM ROSE on horizontal vine -->
+      <circle cx="138" cy="40" r="16" fill="#c98b72" opacity="0.12"/>
+      <path d="M138 24 C144 28,150 34,148 42 C146 50,138 52,132 48 C126 44,124 38,126 32 C128 26,134 22,138 24Z" fill="#c98b72" opacity="0.16"/>
+      <path d="M134 30 C138 32,142 36,142 40 C142 44,138 48,134 46 C130 44,128 40,128 36 C128 32,132 30,134 30Z" fill="#d49c86" opacity="0.18"/>
+      <circle cx="138" cy="40" r="4" fill="#dab09a" opacity="0.16"/>
+
+      <!-- ★ SMALL BUDS -->
+      <circle cx="56" cy="180" r="9" fill="#cc8068" opacity="0.1"/>
+      <path d="M52 173 C56 175,60 179,60 184 C60 189,56 191,52 188 C48 185,48 177,52 173Z" fill="#d49484" opacity="0.14"/>
+
+      <circle cx="184" cy="54" r="9" fill="#cc8068" opacity="0.1"/>
+      <path d="M180 47 C184 49,188 53,188 58 C188 63,184 65,180 62 C176 59,176 51,180 47Z" fill="#d49484" opacity="0.14"/>
+
+      <circle cx="28" cy="95" r="6" fill="#cc8068" opacity="0.08"/>
+      <circle cx="96" cy="26" r="6" fill="#cc8068" opacity="0.08"/>
+
+      <!-- ★ LARGE LEAVES — lush foliage -->
+      <path d="M55 80 C62 70,76 68,80 78 C84 88,74 98,64 94 C54 90,50 86,55 80Z" fill="#5e7a30" opacity="0.22"/>
+      <line x1="56" y1="82" x2="78" y2="82" stroke="#4a6228" stroke-width="0.4" opacity="0.3"/>
+
+      <path d="M80 52 C70 56,68 70,76 76 C84 82,96 74,92 64 C88 54,84 48,80 52Z" fill="#5e7a30" opacity="0.22"/>
+      <line x1="82" y1="54" x2="82" y2="74" stroke="#4a6228" stroke-width="0.4" opacity="0.3"/>
+
+      <path d="M36 110 C44 104,54 106,54 114 C54 122,44 128,38 124 C32 120,30 114,36 110Z" fill="#4e6e2a" opacity="0.2"/>
+      <path d="M110 34 C104 40,106 52,112 54 C118 56,126 46,122 40 C118 34,114 30,110 34Z" fill="#4e6e2a" opacity="0.2"/>
+
+      <path d="M48 155 C54 148,64 148,66 156 C68 164,60 170,52 168 C44 166,44 160,48 155Z" fill="#5a7435" opacity="0.17"/>
+      <path d="M155 44 C148 50,148 62,154 66 C160 70,168 62,166 54 C164 46,160 42,155 44Z" fill="#5a7435" opacity="0.17"/>
+
+      <path d="M62 195 C68 188,78 188,78 196 C78 204,68 208,62 204Z" fill="#6b8040" opacity="0.14"/>
+      <path d="M196 60 C190 66,190 78,196 80 C202 82,208 72,204 64Z" fill="#6b8040" opacity="0.14"/>
+
+      <!-- Small accent leaves -->
+      <path d="M22 68 C26 62,34 62,34 68 C34 74,26 76,22 72Z" fill="#6b8040" opacity="0.16"/>
+      <path d="M68 22 C62 26,62 34,68 34 C74 34,76 26,72 22Z" fill="#6b8040" opacity="0.16"/>
+      <path d="M16 85 C20 80,26 80,26 85 C26 90,20 92,16 88Z" fill="#7a8c4a" opacity="0.12"/>
+      <path d="M85 16 C80 20,80 26,85 26 C90 26,92 20,88 16Z" fill="#7a8c4a" opacity="0.12"/>
+
+      <!-- Curling tendrils -->
+      <path d="M28 58 C24 62,20 60,18 64 C16 68,14 72,16 76" stroke="#8b6f3a" stroke-width="0.6" opacity="0.22" fill="none"/>
+      <path d="M58 28 C62 24,60 20,64 18 C68 16,72 14,76 16" stroke="#8b6f3a" stroke-width="0.6" opacity="0.22" fill="none"/>
+      <path d="M52 100 C48 96,44 98,40 95" stroke="#8b6f3a" stroke-width="0.5" opacity="0.18" fill="none"/>
+      <path d="M100 50 C96 46,98 42,95 38" stroke="#8b6f3a" stroke-width="0.5" opacity="0.18" fill="none"/>
+      <path d="M68 165 C64 160,58 162,55 158" stroke="#8b6f3a" stroke-width="0.4" opacity="0.16" fill="none"/>
+      <path d="M165 68 C160 64,162 58,158 55" stroke="#8b6f3a" stroke-width="0.4" opacity="0.16" fill="none"/>
+
+      <!-- Tiny berry dots -->
+      <circle cx="20" cy="80" r="2.5" fill="#c9856a" opacity="0.16"/>
+      <circle cx="80" cy="20" r="2.5" fill="#c9856a" opacity="0.16"/>
+      <circle cx="38" cy="170" r="2" fill="#c9856a" opacity="0.13"/>
+      <circle cx="170" cy="38" r="2" fill="#c9856a" opacity="0.13"/>
+      <circle cx="14" cy="60" r="1.5" fill="#c9856a" opacity="0.1"/>
+      <circle cx="60" cy="14" r="1.5" fill="#c9856a" opacity="0.1"/>
+      <circle cx="72" cy="200" r="1.8" fill="#c9856a" opacity="0.1"/>
+      <circle cx="200" cy="70" r="1.8" fill="#c9856a" opacity="0.1"/>
+    </svg></div>
+
+    <div class="floral-corner fc-tr"><svg viewBox="0 0 230 230" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M8 8 C20 30,30 65,38 105 C42 125,38 155,48 185 C52 198,62 210,78 218" stroke="#7a6332" stroke-width="1.4" opacity="0.38" fill="none"/>
+      <path d="M8 8 C25 16,60 25,100 34 C135 42,160 46,188 52 C200 55,212 64,218 78" stroke="#7a6332" stroke-width="1.4" opacity="0.38" fill="none"/>
+      <path d="M14 42 C22 62,30 90,34 118 C36 135,32 152,36 170" stroke="#8b6f3a" stroke-width="0.9" opacity="0.28" fill="none"/>
+      <path d="M42 14 C62 22,90 30,118 34 C140 37,152 34,172 38" stroke="#8b6f3a" stroke-width="0.9" opacity="0.28" fill="none"/>
+      <circle cx="42" cy="42" r="24" fill="#cc7e68" opacity="0.14"/>
+      <path d="M42 18 C52 24,60 34,56 44 C52 54,42 58,32 54 C22 50,18 40,22 30 C26 22,36 16,42 18Z" fill="#cc7e68" opacity="0.2"/>
+      <path d="M34 26 C40 28,48 32,50 40 C52 48,46 54,38 52 C30 50,26 44,26 38 C26 32,30 28,34 26Z" fill="#d4907a" opacity="0.22"/>
+      <path d="M38 32 C42 34,46 38,46 42 C46 46,42 50,38 48 C34 46,32 42,32 38 C32 34,36 32,38 32Z" fill="#daa48e" opacity="0.26"/>
+      <circle cx="42" cy="42" r="6" fill="#e0b89e" opacity="0.22"/>
+      <circle cx="44" cy="135" r="16" fill="#c98b72" opacity="0.12"/>
+      <path d="M44 120 C50 124,56 130,54 138 C52 146,44 148,38 144 C32 140,30 134,32 128 C34 122,40 118,44 120Z" fill="#c98b72" opacity="0.16"/>
+      <circle cx="44" cy="135" r="4" fill="#dab09a" opacity="0.16"/>
+      <circle cx="138" cy="40" r="16" fill="#c98b72" opacity="0.12"/>
+      <path d="M138 24 C144 28,150 34,148 42 C146 50,138 52,132 48 C126 44,124 38,126 32 C128 26,134 22,138 24Z" fill="#c98b72" opacity="0.16"/>
+      <circle cx="138" cy="40" r="4" fill="#dab09a" opacity="0.16"/>
+      <circle cx="56" cy="180" r="9" fill="#cc8068" opacity="0.1"/>
+      <circle cx="184" cy="54" r="9" fill="#cc8068" opacity="0.1"/>
+      <path d="M55 80 C62 70,76 68,80 78 C84 88,74 98,64 94 C54 90,50 86,55 80Z" fill="#5e7a30" opacity="0.22"/>
+      <path d="M80 52 C70 56,68 70,76 76 C84 82,96 74,92 64 C88 54,84 48,80 52Z" fill="#5e7a30" opacity="0.22"/>
+      <path d="M36 110 C44 104,54 106,54 114 C54 122,44 128,38 124 C32 120,30 114,36 110Z" fill="#4e6e2a" opacity="0.2"/>
+      <path d="M110 34 C104 40,106 52,112 54 C118 56,126 46,122 40 C118 34,114 30,110 34Z" fill="#4e6e2a" opacity="0.2"/>
+      <path d="M48 155 C54 148,64 148,66 156 C68 164,60 170,52 168 C44 166,44 160,48 155Z" fill="#5a7435" opacity="0.17"/>
+      <path d="M155 44 C148 50,148 62,154 66 C160 70,168 62,166 54 C164 46,160 42,155 44Z" fill="#5a7435" opacity="0.17"/>
+      <path d="M22 68 C26 62,34 62,34 68 C34 74,26 76,22 72Z" fill="#6b8040" opacity="0.16"/>
+      <path d="M68 22 C62 26,62 34,68 34 C74 34,76 26,72 22Z" fill="#6b8040" opacity="0.16"/>
+      <path d="M28 58 C24 62,20 60,18 64" stroke="#8b6f3a" stroke-width="0.6" opacity="0.22" fill="none"/>
+      <path d="M58 28 C62 24,60 20,64 18" stroke="#8b6f3a" stroke-width="0.6" opacity="0.22" fill="none"/>
+      <circle cx="20" cy="80" r="2.5" fill="#c9856a" opacity="0.16"/>
+      <circle cx="80" cy="20" r="2.5" fill="#c9856a" opacity="0.16"/>
+      <circle cx="38" cy="170" r="2" fill="#c9856a" opacity="0.13"/>
+      <circle cx="170" cy="38" r="2" fill="#c9856a" opacity="0.13"/>
+    </svg></div>
+
+    <div class="floral-corner fc-bl"><svg viewBox="0 0 230 230" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M8 8 C20 30,30 65,38 105 C42 125,38 155,48 185 C52 198,62 210,78 218" stroke="#7a6332" stroke-width="1.4" opacity="0.38" fill="none"/>
+      <path d="M8 8 C25 16,60 25,100 34 C135 42,160 46,188 52 C200 55,212 64,218 78" stroke="#7a6332" stroke-width="1.4" opacity="0.38" fill="none"/>
+      <path d="M14 42 C22 62,30 90,34 118 C36 135,32 152,36 170" stroke="#8b6f3a" stroke-width="0.9" opacity="0.28" fill="none"/>
+      <path d="M42 14 C62 22,90 30,118 34 C140 37,152 34,172 38" stroke="#8b6f3a" stroke-width="0.9" opacity="0.28" fill="none"/>
+      <circle cx="42" cy="42" r="24" fill="#cc7e68" opacity="0.14"/>
+      <path d="M42 18 C52 24,60 34,56 44 C52 54,42 58,32 54 C22 50,18 40,22 30 C26 22,36 16,42 18Z" fill="#cc7e68" opacity="0.2"/>
+      <path d="M34 26 C40 28,48 32,50 40 C52 48,46 54,38 52 C30 50,26 44,26 38 C26 32,30 28,34 26Z" fill="#d4907a" opacity="0.22"/>
+      <circle cx="42" cy="42" r="6" fill="#e0b89e" opacity="0.22"/>
+      <circle cx="44" cy="135" r="16" fill="#c98b72" opacity="0.12"/>
+      <circle cx="138" cy="40" r="16" fill="#c98b72" opacity="0.12"/>
+      <path d="M55 80 C62 70,76 68,80 78 C84 88,74 98,64 94 C54 90,50 86,55 80Z" fill="#5e7a30" opacity="0.22"/>
+      <path d="M80 52 C70 56,68 70,76 76 C84 82,96 74,92 64 C88 54,84 48,80 52Z" fill="#5e7a30" opacity="0.22"/>
+      <path d="M36 110 C44 104,54 106,54 114 C54 122,44 128,38 124 C32 120,30 114,36 110Z" fill="#4e6e2a" opacity="0.2"/>
+      <path d="M110 34 C104 40,106 52,112 54 C118 56,126 46,122 40 C118 34,114 30,110 34Z" fill="#4e6e2a" opacity="0.2"/>
+      <path d="M48 155 C54 148,64 148,66 156 C68 164,60 170,52 168 C44 166,44 160,48 155Z" fill="#5a7435" opacity="0.17"/>
+      <path d="M22 68 C26 62,34 62,34 68 C34 74,26 76,22 72Z" fill="#6b8040" opacity="0.16"/>
+      <path d="M68 22 C62 26,62 34,68 34 C74 34,76 26,72 22Z" fill="#6b8040" opacity="0.16"/>
+      <circle cx="56" cy="180" r="9" fill="#cc8068" opacity="0.1"/>
+      <circle cx="184" cy="54" r="9" fill="#cc8068" opacity="0.1"/>
+      <circle cx="20" cy="80" r="2.5" fill="#c9856a" opacity="0.16"/>
+      <circle cx="80" cy="20" r="2.5" fill="#c9856a" opacity="0.16"/>
+    </svg></div>
+
+    <div class="floral-corner fc-br"><svg viewBox="0 0 230 230" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M8 8 C20 30,30 65,38 105 C42 125,38 155,48 185 C52 198,62 210,78 218" stroke="#7a6332" stroke-width="1.4" opacity="0.38" fill="none"/>
+      <path d="M8 8 C25 16,60 25,100 34 C135 42,160 46,188 52 C200 55,212 64,218 78" stroke="#7a6332" stroke-width="1.4" opacity="0.38" fill="none"/>
+      <circle cx="42" cy="42" r="24" fill="#cc7e68" opacity="0.14"/>
+      <path d="M42 18 C52 24,60 34,56 44 C52 54,42 58,32 54 C22 50,18 40,22 30 C26 22,36 16,42 18Z" fill="#cc7e68" opacity="0.2"/>
+      <path d="M34 26 C40 28,48 32,50 40 C52 48,46 54,38 52 C30 50,26 44,26 38 C26 32,30 28,34 26Z" fill="#d4907a" opacity="0.22"/>
+      <circle cx="42" cy="42" r="6" fill="#e0b89e" opacity="0.22"/>
+      <path d="M55 80 C62 70,76 68,80 78 C84 88,74 98,64 94 C54 90,50 86,55 80Z" fill="#5e7a30" opacity="0.22"/>
+      <path d="M80 52 C70 56,68 70,76 76 C84 82,96 74,92 64 C88 54,84 48,80 52Z" fill="#5e7a30" opacity="0.22"/>
+      <path d="M36 110 C44 104,54 106,54 114 C54 122,44 128,38 124 C32 120,30 114,36 110Z" fill="#4e6e2a" opacity="0.2"/>
+      <path d="M110 34 C104 40,106 52,112 54 C118 56,126 46,122 40 C118 34,114 30,110 34Z" fill="#4e6e2a" opacity="0.2"/>
+      <circle cx="44" cy="135" r="16" fill="#c98b72" opacity="0.12"/>
+      <circle cx="138" cy="40" r="16" fill="#c98b72" opacity="0.12"/>
+      <circle cx="56" cy="180" r="9" fill="#cc8068" opacity="0.1"/>
+      <circle cx="184" cy="54" r="9" fill="#cc8068" opacity="0.1"/>
+      <path d="M22 68 C26 62,34 62,34 68 C34 74,26 76,22 72Z" fill="#6b8040" opacity="0.16"/>
+      <path d="M68 22 C62 26,62 34,68 34 C74 34,76 26,72 22Z" fill="#6b8040" opacity="0.16"/>
+      <circle cx="20" cy="80" r="2.5" fill="#c9856a" opacity="0.16"/>
+      <circle cx="80" cy="20" r="2.5" fill="#c9856a" opacity="0.16"/>
+    </svg></div>
+
+    <!-- ══════ SIDE FLORALS ══════ -->
+    <div class="floral-side fs-l"><svg viewBox="0 0 90 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M10 15 C14 45,18 80,14 100 C10 120,14 155,10 185" stroke="#8b6f3a" stroke-width="1" opacity="0.28" fill="none"/>
+      <path d="M18 55 C24 48,36 48,38 56 C40 64,30 72,22 68 C14 64,14 58,18 55Z" fill="#5a7435" opacity="0.18"/>
+      <circle cx="16" cy="88" r="10" fill="#cc8068" opacity="0.1"/>
+      <path d="M14 80 C18 82,22 88,22 94 C22 100,16 102,12 98 C8 94,10 84,14 80Z" fill="#d49484" opacity="0.14"/>
+      <circle cx="16" cy="88" r="3" fill="#daa898" opacity="0.1"/>
+      <path d="M18 125 C24 118,36 118,38 126 C40 134,30 140,22 136 C14 132,14 128,18 125Z" fill="#4e6e2a" opacity="0.17"/>
+      <circle cx="12" cy="155" r="7" fill="#cc8068" opacity="0.08"/>
+      <path d="M10 150 C14 152,16 156,16 160 C16 164,12 166,10 162 C8 158,8 152,10 150Z" fill="#d49484" opacity="0.1"/>
+      <path d="M18 35 C22 30,28 30,28 36 C28 42,22 44,18 40Z" fill="#6b8040" opacity="0.14"/>
+      <path d="M16 168 C20 162,28 164,28 170 C28 176,22 178,18 174Z" fill="#6b8040" opacity="0.12"/>
+      <circle cx="20" cy="42" r="1.5" fill="#c9856a" opacity="0.13"/>
+      <circle cx="14" cy="112" r="1.5" fill="#c9856a" opacity="0.1"/>
+    </svg></div>
+
+    <div class="floral-side fs-r"><svg viewBox="0 0 90 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M10 15 C14 45,18 80,14 100 C10 120,14 155,10 185" stroke="#8b6f3a" stroke-width="1" opacity="0.28" fill="none"/>
+      <path d="M18 55 C24 48,36 48,38 56 C40 64,30 72,22 68 C14 64,14 58,18 55Z" fill="#5a7435" opacity="0.18"/>
+      <circle cx="16" cy="88" r="10" fill="#cc8068" opacity="0.1"/>
+      <path d="M14 80 C18 82,22 88,22 94 C22 100,16 102,12 98 C8 94,10 84,14 80Z" fill="#d49484" opacity="0.14"/>
+      <circle cx="16" cy="88" r="3" fill="#daa898" opacity="0.1"/>
+      <path d="M18 125 C24 118,36 118,38 126 C40 134,30 140,22 136 C14 132,14 128,18 125Z" fill="#4e6e2a" opacity="0.17"/>
+      <circle cx="12" cy="155" r="7" fill="#cc8068" opacity="0.08"/>
+      <path d="M18 35 C22 30,28 30,28 36 C28 42,22 44,18 40Z" fill="#6b8040" opacity="0.14"/>
+      <path d="M16 168 C20 162,28 164,28 170 C28 176,22 178,18 174Z" fill="#6b8040" opacity="0.12"/>
+    </svg></div>
+
+    <!-- Centre watermark -->
+    <div class="center-bloom"><svg viewBox="0 0 340 340" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="170" cy="170" r="110" stroke="#b8944c" stroke-width="0.6"/>
+      <circle cx="170" cy="170" r="70" stroke="#b8944c" stroke-width="0.4"/>
+      <path d="M170 60 C180 105,190 140,170 170 C150 140,160 105,170 60Z" fill="#b8944c"/>
+      <path d="M170 280 C160 235,150 200,170 170 C190 200,180 235,170 280Z" fill="#b8944c"/>
+      <path d="M60 170 C105 160,140 150,170 170 C140 190,105 180,60 170Z" fill="#b8944c"/>
+      <path d="M280 170 C235 180,200 190,170 170 C200 150,235 160,280 170Z" fill="#b8944c"/>
+      <path d="M95 95 C120 110,145 140,170 170 C140 145,110 120,95 95Z" fill="#b8944c"/>
+      <path d="M245 245 C220 230,195 200,170 170 C200 195,230 220,245 245Z" fill="#b8944c"/>
+      <path d="M245 95 C230 120,200 145,170 170 C195 140,220 110,245 95Z" fill="#b8944c"/>
+      <path d="M95 245 C110 220,140 195,170 170 C145 200,120 230,95 245Z" fill="#b8944c"/>
+      <circle cx="170" cy="170" r="22" fill="#b8944c" opacity="0.5"/>
+    </svg></div>
+
+    <!-- ══════ CONTENT ══════ -->
+    <div class="content">
+      <div class="header-line"></div>
+      <div class="invite-label">You are cordially invited</div>
+
+      <h1 class="title">Farewell &amp; Get-Together</h1>
+      <p class="subtitle">An Evening of Gratitude &amp; Togetherness</p>
+
+      <div class="divider">
+        <span class="divider-line"></span>
+        <span class="divider-diamond"></span>
+        <span class="divider-line"></span>
+      </div>
+
+      <p class="body-text">
+        The <em>Medical Officers of Bangalore Urban &amp; Rural</em><br>
+        warmly invite you to join us for a heartfelt evening<br>
+        as we honour our beloved colleagues and<br>
+        celebrate the journeys we've shared.
+      </p>
+
+      <div class="details-grid">
+        <div class="detail-row">
+          <svg class="detail-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+            <line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/>
+            <line x1="3" y1="10" x2="21" y2="10"/>
+          </svg>
+          <div class="detail-content">
+            <div class="detail-label">Date</div>
+            <div class="detail-value">Friday, 3rd April 2026</div>
+            <div class="detail-sub">Good Friday</div>
+          </div>
+        </div>
+        <div class="detail-row">
+          <svg class="detail-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+            <circle cx="12" cy="10" r="3"/>
+          </svg>
+          <div class="detail-content">
+            <div class="detail-label">Venue</div>
+            <div class="detail-value">Jungle Farm's</div>
+            <div class="detail-sub">Near Harohalli, Bangalore</div>
+            <a href="https://maps.app.goo.gl/GguR4zLJC3ytyVUh9?g_st=aw" target="_blank" class="venue-link">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/>
+              </svg>
+              View on Google Maps →
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <div class="divider">
+        <span class="divider-line"></span>
+        <span class="divider-diamond"></span>
+        <span class="divider-line"></span>
+      </div>
+
+      <div class="guests-section">
+        <div class="guests-label">Guests of Honour</div>
+        <div class="guest-name">Dr. Shobha Girimaji</div>
+        <div class="guest-name">Dr. Rajushet</div>
+        <div class="guest-name">Dr. Gayathri</div>
+      </div>
+
+      <div class="divider">
+        <span class="divider-line"></span>
+        <span class="divider-diamond"></span>
+        <span class="divider-line"></span>
+      </div>
+
+      <div class="quote-section">
+        <span class="quote-mark">&ldquo;</span>
+        <p class="quote-text">
+          Some people come into our lives, leave footprints on our hearts,<br>
+          and we are never the same. Here's to the healers who<br>
+          healed us with their presence — this isn't goodbye,<br>
+          it's simply <em>until we meet again.</em>
+        </p>
+      </div>
+
+      <div class="footer-flourish">
+        <span class="footer-line"></span>
+        <span class="footer-dot"></span>
+        <span class="footer-line"></span>
+        <span class="footer-dot"></span>
+        <span class="footer-line"></span>
+      </div>
+    </div>
+
+  </div>
+</div>
+</body>
+</html>
